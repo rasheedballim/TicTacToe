@@ -1,21 +1,27 @@
+// interacting with index.html for element representation
 let playerText = document.getElementById('playerText')
-let restartBtn = document.getElementById('restartBtn')
+let restartButton = document.getElementById('restartButton')
 let boxes = Array.from(document.getElementsByClassName('box'))
-
 let winnerIndicator = getComputedStyle(document.body).getPropertyValue('--winning-blocks')
 
-const O_TEXT = "O"
-const X_TEXT = "X"
-let currentPlayer = X_TEXT
-let spaces = Array(9).fill(null)
+// Player Symbols
+const O = "O"
+const X = "X"
 
+// Start with X initially & initialize all the block as null at first
+let currentPlayer = X
+ let spaces = Array(9).fill(null)
+
+// Function that essentially waits for boxes to be ticked
 const startGame = () => {
     boxes.forEach(box => box.addEventListener('click', boxClicked))
 }
 
+// Once a box has been ticked
 function boxClicked(e) {
     const id = e.target.id
 
+    // If space is empty and clicked, update with players symbol
     if(!spaces[id]){
         spaces[id] = currentPlayer
         e.target.innerText = currentPlayer
@@ -27,11 +33,12 @@ function boxClicked(e) {
             winning_blocks.map( box => boxes[box].style.backgroundColor=winnerIndicator)
             return
         }
-
-        currentPlayer = currentPlayer == X_TEXT ? O_TEXT : X_TEXT
+        // Switch to next player
+        currentPlayer = currentPlayer == X ? O : X
     }
 }
 
+// Possible winning combinations
 const winningCombos = [
     [0,1,2],
     [3,4,5],
@@ -42,11 +49,12 @@ const winningCombos = [
     [0,4,8],
     [2,4,6]
 ]
-
+// Checking if player has won
 function playerHasWon() {
     for (const condition of winningCombos) {
         let [a, b, c] = condition
 
+        // Checks winning combinations
         if(spaces[a] && (spaces[a] == spaces[b] && spaces[a] == spaces[c])) {
             return [a,b,c]
         }
@@ -54,8 +62,8 @@ function playerHasWon() {
     return false
 }
 
-restartBtn.addEventListener('click', restart)
-
+// Resets boxes to null
+restartButton.addEventListener('click', restart)
 function restart() {
     spaces.fill(null)
 
@@ -66,7 +74,8 @@ function restart() {
 
     playerText.innerHTML = 'Tic Tac Toe'
 
-    currentPlayer = X_TEXT
+    currentPlayer = X
 }
 
+// Starts Game
 startGame()
